@@ -23,13 +23,6 @@ class Journey
     fare
   end
 
-  def fare
-    return self.total_fare = MINIMUM_FARE if complete?
-    self.total_fare = PENALTY_FARE
-    self.trip[:entry_station] = nil
-    self.total_fare
-  end
-
   def incomplete?
     self.trip[:entry_station].nil? || self.trip[:exit_station].nil?
   end
@@ -48,4 +41,10 @@ class Journey
 
   private
   attr_writer :entry_station, :exit_station, :trip, :total_fare
+
+  def fare
+    return self.total_fare = MINIMUM_FARE if complete?
+    self.total_fare = PENALTY_FARE
+    self.trip[:entry_station] = nil
+  end
 end

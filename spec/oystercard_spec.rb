@@ -42,36 +42,12 @@ describe Oystercard do
       end
     end
 
-    context "touch in" do
-      before do
-        oyster.top_up(10)
-      end
-
-      it "should set in_journey? to true" do
-      oyster.touch_in(entry_station)
-      expect(oyster.in_journey?).to be true
-      end
-    end
-
-    context 'in_journey?' do
-      it 'should show the current journey status' do
-        oyster.top_up(5)
-        oyster.touch_in(entry_station)
-        expect(oyster.in_journey?).to be true
-      end
-    end
-
     context "touching out" do
         before do
           oyster.top_up(10)
           oyster.touch_in(entry_station)
           allow(journey).to receive(:total_fare) {1}
         end
-
-      it 'should set in_journey to false' do
-        oyster.touch_out(exit_station)
-        expect(oyster.in_journey?).to be false
-      end
       it 'should store the trip in journey_history' do
         oyster.touch_out(exit_station)
         expect(oyster.journey_history).to eq [{ entry_station: entry_station, exit_station: exit_station }]

@@ -20,22 +20,18 @@ attr_reader :balance, :in_journey, :journey_history, :journey
 
   def touch_in(entry_station)
     fail "Not enough funds to travel" if self.balance < MINIMUM_BALANCE
-    @journey = Journey.new if !in_journey?
+    create_journey?
     journey.start(entry_station)
     deduct(self.journey.total_fare)
-    self.in_journey = true
-  end
-
-  def in_journey?
-    self.in_journey
+    start_journey
   end
 
   def touch_out(exit_station)
-    @journey = Journey.new if !in_journey?
+    create_journey?
     self.journey.finish(exit_station)
     deduct(self.journey.total_fare)
-    self.journey_history << journey.trip
-    self.in_journey = false
+    save_journey
+    end_journey
   end
 
   private
@@ -43,6 +39,26 @@ attr_reader :balance, :in_journey, :journey_history, :journey
 
   def deduct(amount)
     self.balance -= amount
+  end
+
+  def create_journey?
+    @journey = Journey.new if !in_journey?
+  end
+
+  def start_journey
+    @in_journey = true
+  end
+
+  def in_journey?
+    self.in_journey
+  end
+
+  def end_journey
+    @in_journey = false
+  end
+
+  def save_journey
+    self.journey_history << journey.trip
   end
 
 end
